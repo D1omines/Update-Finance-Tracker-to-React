@@ -1,0 +1,297 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+body {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  color: #333;
+}
+
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+}
+
+.form select,
+.form input {
+  flex: 1 1 150px;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.form button {
+  padding: 0.6rem 1rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.form button:hover {
+  background: #1d4ed8;
+}
+
+.balance {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.card {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.transactions {
+  list-style: none;
+  margin-top: 1rem;
+}
+
+.operation-header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.operation-search {
+  border-radius: 5px;
+  padding: 10px;
+  height: 1.6rem;
+  border: 1px solid #2563eb;
+}
+
+.transactions li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid #eee;
+
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.transactions li:hover {
+  background-color: #2564eb15;
+  transition: 0.1s;
+}
+
+.transactions li.income {
+  color: #22c55e;
+}
+
+.transactions li.expense {
+  color: #ef4444;
+}
+
+.transactions .delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.transactions__text {
+  width: 14rem;
+}
+
+.stats {
+  list-style: none;
+  margin-top: 0.5rem;
+}
+
+.stats li {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+}
+
+.stats__items-price {
+  font-weight: bold;
+}
+
+.info-title-null {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 17px;
+}
+
+.modal__card {
+  position: fixed;
+  z-index: 100;
+  top: 0px;
+  left: 0px;
+
+  margin: 0;
+  padding: 0;
+
+  background-color: #33333363;
+  width: 100%;
+  height: 100%;
+}
+
+.modal__card-container {
+  height: 200px;
+  width: 50%;
+  background-color: #fff;
+  margin: 0 auto;
+  margin-top: 200px;
+  border-radius: 10px;
+}
+
+.modal__card-container-title {
+  text-align: center;
+  padding-top: 20px;
+}
+
+.modal__card-container-data {
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+
+  padding-top: 25px;
+}
+
+.modal__card-container-data input {
+  height: 30px;
+  padding: 5px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.modal__card-container-btn {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.modal__card-container-btn button {
+  width: 125px;
+  height: 25px;
+  margin-left: 10px;
+
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal__card-hiden {
+  display: none;
+}
+
+@media (max-width: 1300px) {
+  .modal__card-container {
+    height: 45%;
+  }
+
+  .modal__card-container-data {
+    flex-wrap: wrap;
+  }
+
+  .modal__card-container-data-komment-text {
+    padding-top: 25px;
+  }
+}
+
+@media (max-width: 974px) {
+  .modal__card-container-data-date-text {
+    padding-top: 25px;
+  }
+}
+
+@media (max-width: 650px) {
+  .modal__card-container {
+    margin-top: 90px;
+  }
+  .media-padding {
+    padding-top: 25px;
+  }
+
+  .modal__card-container {
+    height: 512px;
+  }
+}
+
+@media (max-width: 606px) {
+  .form__btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 549px) {
+  .modal__card-container {
+    margin-top: 30px;
+    height: 90vh;
+  }
+
+  .modal__card-container-btn {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 10px;
+  }
+  .modal__card-container-btn button {
+    margin: 0 auto;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    width: 90%;
+    height: 35px;
+  }
+}
+
+@media (max-width: 450px) {
+  h2 {
+    font-size: 21px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 430px) {
+  h1 {
+    font-size: 28px;
+  }
+
+  .transactions__text-date {
+    border-left: 1px solid #b4b4b4;
+    border-right: 1px solid #b4b4b4;
+    width: 48%;
+    padding-left: 25px;
+  }
+}
