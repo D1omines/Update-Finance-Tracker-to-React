@@ -7,6 +7,7 @@ import ExpensesList from "./Components/ExpensesList";
 import ModalOperation from "./Components/ModalOperation";
 
 function App() {
+  //App State
   const [selectName, setSetectName] = useState("income");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
@@ -15,10 +16,15 @@ function App() {
   const [currentBalance, setCurrentBalance] = useState(0);
   const [currentOperation, setCurrentOperation] = useState({});
 
-  const [expenceCategory, setExpenceCategory] = useState([]);
-  const [isShowOperation, setIsShowOperation] = useState(false);
-
+  //Operation State
+  const [filterOperation, setFilterOperation] = useState("all");
   const [searchValue, setSearchValue] = useState("");
+
+  //Expence State
+  const [expenceCategory, setExpenceCategory] = useState([]);
+
+  //Modal State
+  const [isShowOperation, setIsShowOperation] = useState(false);
 
   let id = JSON.parse(localStorage.getItem("id") || 1);
   const date = new Date();
@@ -51,6 +57,8 @@ function App() {
 
     setExpenceCategory(expenceCategory);
   }, [operation]);
+
+  //FUNCTION
 
   function addOperation() {
     if (selectName === "expense") {
@@ -105,9 +113,17 @@ function App() {
     );
   }
 
-  const filterSearchResult = operation.filter((el) =>
-    el.category.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  //Logic Operation
+
+  const filterResult = operation.filter((el) => {
+    const searchInput = el.category
+      .toLowerCase()
+      .includes(searchValue.toLowerCase());
+    const searchFilterType =
+      filterOperation === "all" ? true : el.selectName === filterOperation;
+
+    return searchInput && searchFilterType;
+  });
 
   return (
     <div className="container">
@@ -131,9 +147,11 @@ function App() {
       <Operation
         operation={operation}
         setSearchValue={setSearchValue}
+        setOperation={setOperation}
         searchValue={searchValue}
+        setFilterOperation={setFilterOperation}
       >
-        {filterSearchResult.map((el) => (
+        {filterResult.map((el) => (
           <OperationList
             key={el.id}
             id={el.id}
@@ -146,7 +164,7 @@ function App() {
           />
         ))}
       </Operation>
-      <Expenses>
+      <Expenses expenceCategory={expenceCategory}>
         {expenceCategory.map((el) => (
           <ExpensesList
             key={el.category}

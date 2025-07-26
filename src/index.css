@@ -65,6 +65,12 @@ h1 {
 }
 
 .balance {
+  width: 50%;
+  margin: 0 auto;
+  border: 1px solid #2563eb;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 10px;
   font-size: 1.2rem;
   margin-bottom: 1rem;
   text-align: center;
@@ -85,14 +91,39 @@ h1 {
 
 .operation-header {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+  margin-right: 0.7rem;
 }
 
 .operation-search {
   border-radius: 5px;
   padding: 10px;
   height: 1.6rem;
+  border: 1px solid #2563eb;
+}
+
+.operation-button-filter {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+}
+
+.operation-button-filter > button {
+  padding: 0.6rem 1rem;
+  margin-right: 10px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 50%;
+}
+
+.operation-button-filter > button.clear-btn {
+  background-color: #fff;
+  color: #000;
   border: 1px solid #2563eb;
 }
 
