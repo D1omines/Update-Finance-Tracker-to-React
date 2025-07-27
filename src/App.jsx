@@ -5,6 +5,7 @@ import OperationList from "./Components/OperationList";
 import Expenses from "./Components/Expenses";
 import ExpensesList from "./Components/ExpensesList";
 import ModalOperation from "./Components/ModalOperation";
+
 import History from "./Components/History Block/History";
 
 function App() {
@@ -31,6 +32,8 @@ function App() {
     resultIncome: 0,
     resultExpense: 0,
   });
+
+  //History State
 
   //Modal State
   const [isShowOperation, setIsShowOperation] = useState(false);
@@ -84,8 +87,7 @@ function App() {
   //FUNCTION
 
   function addOperation() {
-    if (selectName === "expense") {
-    }
+    const now = new Date().toLocaleDateString("ru-RU");
 
     const newOperation = {
       id,
@@ -93,9 +95,7 @@ function App() {
       amount,
       category,
       komment,
-      date: `${String(date.getDate()).padStart(2, "0")}-${String(
-        date.getMonth() + 1
-      ).padStart(2, "0")}-${date.getFullYear()}`,
+      date: now,
     };
 
     setOperation((prev) => [newOperation, ...prev]);
@@ -109,7 +109,7 @@ function App() {
     localStorage.setItem("id", JSON.stringify(id));
     localStorage.setItem(
       "operations",
-      JSON.stringify([...operation, newOperation])
+      JSON.stringify([newOperation, ...operation])
     );
   }
 
@@ -148,6 +148,12 @@ function App() {
     return searchInput && searchFilterType;
   });
 
+  const formattedTotal = new Intl.NumberFormat("ru-RU", {
+    style: "currency",
+    currency: "RUB",
+    minimumFractionDigits: 0,
+  }).format(currentBalance);
+
   const formattedIncome = new Intl.NumberFormat("ru-RU", {
     style: "currency",
     currency: "RUB",
@@ -185,6 +191,10 @@ function App() {
             setKomment={setKomment}
             komment={komment}
           />
+
+          <h3 className="currentBalans balance">
+            Текущий баланс: {formattedTotal}
+          </h3>
           <Operation
             operation={operation}
             setSearchValue={setSearchValue}
@@ -243,26 +253,6 @@ function App() {
       )}
       {switchValue === "history" && (
         <>
-          <section>
-            <div className="card">
-              <h2>Расходы по месяцам</h2>
-              <div className="month-container">
-                <button className="month button">Январь</button>
-                <button className="month button">Февраль</button>
-                <button className="month button">Март</button>
-                <button className="month button">Апрель</button>
-                <button className="month button">Май</button>
-                <button className="month button">Июнь</button>
-                <button className="month button">Июль</button>
-                <button className="month button">Август</button>
-                <button className="month button">Сентябрь</button>
-                <button className="month button">Октябрь</button>
-                <button className="month button">Ноябрь</button>
-                <button className="month button">Декабрь</button>
-              </div>
-            </div>
-          </section>
-
           <History operation={operation}></History>
         </>
       )}

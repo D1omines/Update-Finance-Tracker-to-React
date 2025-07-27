@@ -25,7 +25,7 @@ export default function BarChart({ incomeOpeeration, expenseOpeeration }) {
       {
         label: ["Финансы"],
         data: [incomeOpeeration, expenseOpeeration],
-        backgroundColor: ["green", "red"],
+        backgroundColor: ["green", "#ff548b"],
         borderRadius: 6,
       },
     ],

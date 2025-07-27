@@ -1,0 +1,34 @@
+.month-container > button.monthActive {
+  background-color: #ff548b;
+}
+
+.monthlyExpenses__container {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.monthlyExpenses__list {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+}
+
+.monthlyExpenses__item {
+  display: flex;
+  justify-content: space-between;
+  background-color: #799dff;
+  padding: 10px;
+  margin-bottom: 10px;
+  color: white;
+  border-radius: 10px;
+}
+
+.monthlyExpenses__item-description {
+  display: flex;
+  justify-content: start;
+  width: 50%;
+}
+
+.monthlyExpenses__item-price {
+  width: 30%;
+}

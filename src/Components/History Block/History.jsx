@@ -1,20 +1,55 @@
-import { ExpenseChart } from "../Graphics Logic/ExpenseChart";
-import BarChart from "../Graphics Logic/BarChart";
+import HistoryBar from "./HistoryBar";
+import HistoryList from "./HistoryList";
+import HistiryMonths from "./HistoryMonths";
+import { useEffect, useState } from "react";
+import HistoryTotal from "./HistoryTotal";
 
 export default function History({ operation }) {
-  const sampleData = [
-    { category: "Еда", amount: 3000 },
-    { category: "Развлечения", amount: 1200 },
-    { category: "Транспорт", amount: 700 },
+  const [currentMonthOperation, setCurrentMonthOperation] = useState([]);
+  const [styleCurrMonth, setStyleCurrMonth] = useState("");
+  const [nameMonth, setNameMonth] = useState("");
+
+  const monthName = [
+    "Январь",
+    "Февраль",
+    "Март",
+    "Апрель",
+    "Май",
+    "Июнь",
+    "Июль",
+    "Август",
+    "Сентября",
+    "Октябрь",
+    "Ноябрь",
+    "Декабрь",
   ];
 
-  const incomeOpeeration = operation
+  useEffect(() => {
+    const now = String(new Date().getMonth() + 1).padStart(2, "0");
+
+    const currMonthOper = operation.filter((el) => el.date.includes(`${now}`));
+    setCurrentMonthOperation(currMonthOper);
+    setStyleCurrMonth(now);
+    setNameMonth(monthName[Number(now - 1)]);
+    console.log(currentMonthOperation);
+  }, [operation]);
+
+  const operationFilter = currentMonthOperation
+    .filter((el) => el.selectName === "expense")
+    .sort((a, b) => b.amount - a.amount);
+
+  const operationData = operationFilter.slice(0, 3).map((el) => ({
+    category: el.category,
+    amount: el.amount,
+  }));
+
+  const incomeOpeeration = currentMonthOperation
     .filter((el) => el.selectName === "income")
     .reduce((sum, op) => {
       return (sum += Number(op.amount));
     }, 0);
 
-  const expenseOpeeration = operation
+  const expenseOpeeration = currentMonthOperation
     .filter((el) => el.selectName === "expense")
     .reduce((sum, op) => {
       return (sum += Number(op.amount));
@@ -22,49 +57,44 @@ export default function History({ operation }) {
 
   const remains = incomeOpeeration - expenseOpeeration;
 
+  function changeMonth(month) {
+    const currMonthOper = operation.filter((el) =>
+      el.date.includes(`${month}`)
+    );
+
+    setCurrentMonthOperation(currMonthOper);
+    setStyleCurrMonth(month);
+    setNameMonth(monthName[Number(month - 1)]);
+  }
+
   return (
-    <section>
-      <div className="card-info">
-        <div className="month__data container-mini">
-          <h3>Июль</h3>
+    <>
+      <HistiryMonths
+        changeMonth={changeMonth}
+        styleCurrMonth={styleCurrMonth}
+      />
+      <section>
+        <HistoryBar
+          nameMonth={nameMonth}
+          incomeOpeeration={incomeOpeeration}
+          expenseOpeeration={expenseOpeeration}
+          remains={remains}
+          operationData={operationData}
+        />
 
-          <div style={{ height: "300px" }} className="month_data-graphics">
-            <BarChart
-              incomeOpeeration={incomeOpeeration}
-              expenseOpeeration={expenseOpeeration}
-            />
-          </div>
-          <div className="month__total-remains">
-            <p>Доходы: {incomeOpeeration}₽</p>
-            <p>Расходы: {expenseOpeeration}₽</p>
-            <p>Остаток: {remains}₽</p>
-          </div>
-        </div>
-
-        <div className="month__total container-mini">
-          <h4>Основные расходы</h4>
-
-          <div className="month__total-stats">
-            <div className="month__total-graphics">
-              <ExpenseChart data={sampleData} />
-            </div>
-            <div className="month__total-values">
-              <p>Еда</p>
-              <p>Транспорт</p>
-              <p>Разввлечения</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="card">
-        <h2>История за месяц</h2>
-        <div>
-          <ul>
-            <li></li>
-          </ul>
-        </div>
-      </div>
-    </section>
+        <HistoryTotal>
+          {currentMonthOperation.map((el) => (
+            <HistoryList
+              key={el.id}
+              selectName={el.selectName}
+              id={el.id}
+              date={el.date}
+              amount={el.amount}
+              category={el.category}
+            ></HistoryList>
+          ))}
+        </HistoryTotal>
+      </section>
+    </>
   );
 }
