@@ -6,7 +6,7 @@ export default function Operation({
   children,
 }) {
   return (
-    <>
+    <section>
       <div className="card">
         <div className="operation-header">
           <h2>Операции в этом месяце</h2>
@@ -20,19 +20,19 @@ export default function Operation({
         </div>
         <div className="operation-button-filter">
           <button
-            className="income-btn"
+            className="income-btn button"
             onClick={() => setFilterOperation("income")}
           >
             Доходы
           </button>
           <button
-            className="expense-btn"
+            className="expense-btn button"
             onClick={() => setFilterOperation("expense")}
           >
             Расходы
           </button>
           <button
-            className="clear-btn"
+            className="clear-btn button"
             onClick={() => setFilterOperation("all")}
           >
             Очистить фильтр
@@ -47,6 +47,6 @@ export default function Operation({
           {children}
         </ul>
       </div>
-    </>
+    </section>
   );
 }

@@ -5,8 +5,11 @@ import OperationList from "./Components/OperationList";
 import Expenses from "./Components/Expenses";
 import ExpensesList from "./Components/ExpensesList";
 import ModalOperation from "./Components/ModalOperation";
+import History from "./Components/History Block/History";
 
 function App() {
+  //Switch State
+  const [switchValue, setSwitchValue] = useState("main");
   //App State
   const [selectName, setSetectName] = useState("income");
   const [amount, setAmount] = useState("");
@@ -23,6 +26,12 @@ function App() {
   //Expence State
   const [expenceCategory, setExpenceCategory] = useState([]);
 
+  //Total State
+  const [resultAmount, setResultAmount] = useState({
+    resultIncome: 0,
+    resultExpense: 0,
+  });
+
   //Modal State
   const [isShowOperation, setIsShowOperation] = useState(false);
 
@@ -36,6 +45,18 @@ function App() {
 
   useEffect(() => {
     calculateBalance();
+
+    const income = operation
+      .filter((el) => el.selectName === "income")
+      .reduce((sum, op) => {
+        return (sum += Number(op.amount));
+      }, 0);
+
+    const expense = operation
+      .filter((el) => el.selectName === "expense")
+      .reduce((sum, op) => {
+        return (sum += Number(op.amount));
+      }, 0);
 
     const expenceCategory = operation
       .filter((el) => el.selectName === "expense")
@@ -56,6 +77,8 @@ function App() {
       .sort((a, b) => b.amount - a.amount);
 
     setExpenceCategory(expenceCategory);
+
+    setResultAmount({ resultIncome: income, resultExpense: expense });
   }, [operation]);
 
   //FUNCTION
@@ -125,61 +148,123 @@ function App() {
     return searchInput && searchFilterType;
   });
 
+  const formattedIncome = new Intl.NumberFormat("ru-RU", {
+    style: "currency",
+    currency: "RUB",
+    minimumFractionDigits: 0,
+  }).format(resultAmount.resultIncome);
+
+  const formattedExpense = new Intl.NumberFormat("ru-RU", {
+    style: "currency",
+    currency: "RUB",
+    minimumFractionDigits: 0,
+  }).format(resultAmount.resultExpense);
+
   return (
     <div className="container">
       <h1>💰 Финансовый трекер</h1>
-      <Inputzone
-        setSetectName={setSetectName}
-        selectName={selectName}
-        setAmount={setAmount}
-        amount={amount}
-        setCategory={setCategory}
-        category={category}
-        setKomment={setKomment}
-        komment={komment}
-        addOperation={addOperation}
-      />
+      <header>
+        <button className="button" onClick={() => setSwitchValue("main")}>
+          Новая операция
+        </button>
+        <button className="button" onClick={() => setSwitchValue("history")}>
+          История операций
+        </button>
+      </header>
 
-      <div className="balance">
-        Текущий баланс: <span id="balance">{`${currentBalance} ₽`}</span>
-      </div>
+      {switchValue === "main" && (
+        <>
+          <Inputzone
+            addOperation={addOperation}
+            setSetectName={setSetectName}
+            selectName={selectName}
+            setAmount={setAmount}
+            amount={amount}
+            setCategory={setCategory}
+            category={category}
+            setKomment={setKomment}
+            komment={komment}
+          />
+          <Operation
+            operation={operation}
+            setSearchValue={setSearchValue}
+            setOperation={setOperation}
+            searchValue={searchValue}
+            setFilterOperation={setFilterOperation}
+          >
+            {filterResult.map((el) => (
+              <OperationList
+                key={el.id}
+                id={el.id}
+                selectName={el.selectName}
+                amount={el.amount}
+                category={el.category}
+                showOperation={showOperation}
+                deleteOperation={deleteOperation}
+                date={el.date}
+              />
+            ))}
+          </Operation>
+          <Expenses expenceCategory={expenceCategory}>
+            {expenceCategory.map((el) => (
+              <ExpensesList
+                key={el.category}
+                category={el.category}
+                amount={el.amount}
+              />
+            ))}
+          </Expenses>
+          {isShowOperation && (
+            <ModalOperation
+              currentOperation={currentOperation}
+              setIsShowOperation={setIsShowOperation}
+              setOperation={setOperation}
+              operation={operation}
+            />
+          )}
+          <section>
+            <div className="result-container card">
+              <h2>Итого</h2>
+              <div className="result-container__block">
+                <div className="result-container__text">
+                  <div className="result__income">
+                    <p>Доходы</p>
+                    <div className="result__amount">{formattedIncome}</div>
+                  </div>
+                  <div className="result__expense">
+                    <p>Расходы</p>
+                    <div className="result__amount">{formattedExpense}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+      {switchValue === "history" && (
+        <>
+          <section>
+            <div className="card">
+              <h2>Расходы по месяцам</h2>
+              <div className="month-container">
+                <button className="month button">Январь</button>
+                <button className="month button">Февраль</button>
+                <button className="month button">Март</button>
+                <button className="month button">Апрель</button>
+                <button className="month button">Май</button>
+                <button className="month button">Июнь</button>
+                <button className="month button">Июль</button>
+                <button className="month button">Август</button>
+                <button className="month button">Сентябрь</button>
+                <button className="month button">Октябрь</button>
+                <button className="month button">Ноябрь</button>
+                <button className="month button">Декабрь</button>
+              </div>
+            </div>
+          </section>
 
-      <Operation
-        operation={operation}
-        setSearchValue={setSearchValue}
-        setOperation={setOperation}
-        searchValue={searchValue}
-        setFilterOperation={setFilterOperation}
-      >
-        {filterResult.map((el) => (
-          <OperationList
-            key={el.id}
-            id={el.id}
-            selectName={el.selectName}
-            amount={el.amount}
-            category={el.category}
-            showOperation={showOperation}
-            deleteOperation={deleteOperation}
-            date={el.date}
-          />
-        ))}
-      </Operation>
-      <Expenses expenceCategory={expenceCategory}>
-        {expenceCategory.map((el) => (
-          <ExpensesList
-            key={el.category}
-            category={el.category}
-            amount={el.amount}
-          />
-        ))}
-      </Expenses>
-      {isShowOperation && (
-        <ModalOperation
-          currentOperation={currentOperation}
-          setIsShowOperation={setIsShowOperation}
-          setOperation={setOperation}
-          operation={operation}
-        />
+          <History operation={operation}></History>
+        </>
       )}
     </div>
   );

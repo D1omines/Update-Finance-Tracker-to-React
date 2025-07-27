@@ -26,9 +26,38 @@ body {
   margin: 0 auto;
 }
 
+.button {
+  padding: 0.6rem 1rem;
+  margin-right: 10px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 50%;
+}
+
+.button:hover {
+  background: #1d4ed8;
+  color: #fff;
+}
+
 h1 {
   text-align: center;
   margin-bottom: 1.5rem;
+}
+
+header {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+header > button {
+  width: 100%;
 }
 
 .form {
@@ -109,19 +138,7 @@ h1 {
   margin: 20px 0;
 }
 
-.operation-button-filter > button {
-  padding: 0.6rem 1rem;
-  margin-right: 10px;
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s;
-  width: 50%;
-}
-
-.operation-button-filter > button.clear-btn {
+.clear-btn {
   background-color: #fff;
   color: #000;
   border: 1px solid #2563eb;
@@ -181,6 +198,99 @@ h1 {
   text-align: center;
   margin-top: 30px;
   font-size: 17px;
+}
+
+.result-container__block {
+  margin-top: 0.5rem;
+  line-height: 2rem;
+}
+
+.result__income,
+.result__expense {
+  display: flex;
+  justify-content: space-between;
+}
+
+.result__amount {
+  font-weight: bold;
+}
+
+.month-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+.month-container > button {
+  width: 5rem;
+  text-align: center;
+  padding: 10px;
+}
+
+.card-info {
+  display: flex;
+  justify-content: space-around;
+  gap: 30px;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.container-mini {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 12px;
+  width: 50%;
+  box-shadow: 0 2px 8px rgb(14 14 14 / 14%);
+}
+
+.month__data-text {
+  margin-top: 10px;
+}
+
+.month_data-graphics {
+  margin-top: 20px;
+}
+
+.month__data-description {
+  margin-top: 20px;
+}
+
+.month__total-remains {
+  margin-top: 20px;
+}
+
+.month__total > h4 {
+  margin-top: 10px;
+}
+
+.month__total-values {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.month__total-values > p {
+  background-color: #658bf1;
+  padding: 5px;
+  border-radius: 10px;
+  color: #fff;
+  width: 100%;
+}
+
+.month__tota-description {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 20px;
 }
 
 .modal__card {
