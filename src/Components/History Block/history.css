@@ -32,3 +32,21 @@
 .monthlyExpenses__item-price {
   width: 30%;
 }
+
+@media (max-width: 450px) {
+  .card-info {
+    flex-direction: column;
+  }
+
+  .container-mini {
+    width: 100%;
+  }
+
+  .monthlyExpenses__item {
+    font-size: 0.7rem;
+  }
+
+  .monthlyExpenses__item-description {
+    width: 70%;
+  }
+}

@@ -180,7 +180,7 @@ header > button {
 }
 
 .stats {
-  margin-top: 0.5rem;
+  margin-top: 1.3rem;
 }
 
 .stats li {
@@ -407,6 +407,21 @@ header > button {
   .form__btn {
     width: 100%;
   }
+
+  .balance {
+    width: 100%;
+  }
+
+  .operation-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .operation-search {
+    margin-top: 10px;
+    height: 2rem;
+    width: 100%;
+  }
 }
 
 @media (max-width: 549px) {
@@ -427,12 +442,33 @@ header > button {
     width: 90%;
     height: 35px;
   }
+
+  .transactions__text-date {
+    padding-right: 2rem;
+  }
 }
 
 @media (max-width: 450px) {
   h2 {
     font-size: 21px;
     text-align: center;
+  }
+
+  header {
+    flex-direction: column;
+  }
+
+  header > button.button {
+    width: 100%;
+  }
+
+  .operation-button-filter {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .operation-button-filter > button {
+    width: 100%;
   }
 }
 
@@ -441,10 +477,12 @@ header > button {
     font-size: 28px;
   }
 
+  .transactions__text {
+    width: 10rem;
+  }
+
   .transactions__text-date {
-    border-left: 1px solid #b4b4b4;
-    border-right: 1px solid #b4b4b4;
     width: 48%;
-    padding-left: 25px;
+    padding-left: 9px;
   }
 }

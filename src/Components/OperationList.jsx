@@ -14,8 +14,11 @@ export default function OperationList({
       onClick={() => showOperation(id)}
     >
       <p className="transactions__text">
-        {selectName === "income" ? "+" : "-"}
-        <span className="transactions__text-price">{amount}</span>₽ {""}
+        <span className="transactions__text-price">
+          {selectName === "income" ? "+" : "-"}
+          {amount}₽
+        </span>{" "}
+        {""}
         <span className="transactions__text-category">{category}</span>
       </p>
       <p className="transactions__text-date">{date}</p>

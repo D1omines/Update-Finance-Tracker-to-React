@@ -17,8 +17,9 @@ function App() {
   const [category, setCategory] = useState("");
   const [komment, setKomment] = useState("");
   const [operation, setOperation] = useState([]);
-  const [currentBalance, setCurrentBalance] = useState(0);
   const [currentOperation, setCurrentOperation] = useState({});
+  const [monthOperation, setMonthOperation] = useState([]);
+  const [currentBalance, setCurrentBalance] = useState(0);
 
   //Operation State
   const [filterOperation, setFilterOperation] = useState("all");
@@ -40,6 +41,7 @@ function App() {
 
   let id = JSON.parse(localStorage.getItem("id") || 1);
   const date = new Date();
+  const now = String(date.getMonth() + 1).padStart(2, "0");
 
   useEffect(() => {
     setOperation(JSON.parse(localStorage.getItem("operations")) || []);
@@ -47,21 +49,22 @@ function App() {
   }, []);
 
   useEffect(() => {
-    calculateBalance();
+    const currMonthOper = operation.filter((el) => el.date.includes(`${now}`));
+    console.log(currMonthOper);
 
-    const income = operation
+    const income = currMonthOper
       .filter((el) => el.selectName === "income")
       .reduce((sum, op) => {
         return (sum += Number(op.amount));
       }, 0);
 
-    const expense = operation
+    const expense = currMonthOper
       .filter((el) => el.selectName === "expense")
       .reduce((sum, op) => {
         return (sum += Number(op.amount));
       }, 0);
 
-    const expenceCategory = operation
+    const expenceCategory = currMonthOper
       .filter((el) => el.selectName === "expense")
       .reduce((acc, curr) => {
         const existing = acc.find((item) => item.category === curr.category);
@@ -79,9 +82,10 @@ function App() {
       }, [])
       .sort((a, b) => b.amount - a.amount);
 
+    calculateBalance();
     setExpenceCategory(expenceCategory);
-
     setResultAmount({ resultIncome: income, resultExpense: expense });
+    setMonthOperation(currMonthOper);
   }, [operation]);
 
   //FUNCTION
@@ -138,7 +142,7 @@ function App() {
 
   //Logic Operation
 
-  const filterResult = operation.filter((el) => {
+  const filterResult = monthOperation.filter((el) => {
     const searchInput = el.category
       .toLowerCase()
       .includes(searchValue.toLowerCase());
@@ -253,7 +257,10 @@ function App() {
       )}
       {switchValue === "history" && (
         <>
-          <History operation={operation}></History>
+          <History
+            operation={operation}
+            monthOperation={monthOperation}
+          ></History>
         </>
       )}
     </div>

@@ -4,7 +4,7 @@ import HistiryMonths from "./HistoryMonths";
 import { useEffect, useState } from "react";
 import HistoryTotal from "./HistoryTotal";
 
-export default function History({ operation }) {
+export default function History({ operation, monthOperation }) {
   const [currentMonthOperation, setCurrentMonthOperation] = useState([]);
   const [styleCurrMonth, setStyleCurrMonth] = useState("");
   const [nameMonth, setNameMonth] = useState("");
@@ -27,11 +27,9 @@ export default function History({ operation }) {
   useEffect(() => {
     const now = String(new Date().getMonth() + 1).padStart(2, "0");
 
-    const currMonthOper = operation.filter((el) => el.date.includes(`${now}`));
-    setCurrentMonthOperation(currMonthOper);
+    setCurrentMonthOperation(monthOperation);
     setStyleCurrMonth(now);
     setNameMonth(monthName[Number(now - 1)]);
-    console.log(currentMonthOperation);
   }, [operation]);
 
   const operationFilter = currentMonthOperation
