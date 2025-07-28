@@ -50,7 +50,6 @@ function App() {
 
   useEffect(() => {
     const currMonthOper = operation.filter((el) => el.date.includes(`${now}`));
-    console.log(currMonthOper);
 
     const income = currMonthOper
       .filter((el) => el.selectName === "income")
