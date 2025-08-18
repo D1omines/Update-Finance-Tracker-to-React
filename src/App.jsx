@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+import Section from "./Components/Section";
 import Inputzone from "./Components/InputZone";
 import Operation from "./Components/Operation";
 import OperationList from "./Components/OperationList";
@@ -7,262 +9,99 @@ import ExpensesList from "./Components/ExpensesList";
 import ModalOperation from "./Components/ModalOperation";
 
 import History from "./Components/History Block/History";
+import { useContext } from "react";
+import { operationContext } from "./Components/Layout";
 
 function App() {
-  //Switch State
-  const [switchValue, setSwitchValue] = useState("main");
-  //App State
-  const [selectName, setSetectName] = useState("income");
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("");
-  const [komment, setKomment] = useState("");
-  const [operation, setOperation] = useState([]);
-  const [currentOperation, setCurrentOperation] = useState({});
-  const [monthOperation, setMonthOperation] = useState([]);
-  const [currentBalance, setCurrentBalance] = useState(0);
-
-  //Operation State
-  const [filterOperation, setFilterOperation] = useState("all");
-  const [searchValue, setSearchValue] = useState("");
-
-  //Expence State
-  const [expenceCategory, setExpenceCategory] = useState([]);
-
-  //Total State
-  const [resultAmount, setResultAmount] = useState({
-    resultIncome: 0,
-    resultExpense: 0,
-  });
-
-  //History State
-
-  //Modal State
-  const [isShowOperation, setIsShowOperation] = useState(false);
-
-  let id = JSON.parse(localStorage.getItem("id") || 1);
-  const date = new Date();
-  const now = String(date.getMonth() + 1).padStart(2, "0");
-
-  useEffect(() => {
-    setOperation(JSON.parse(localStorage.getItem("operations")) || []);
-    calculateBalance();
-  }, []);
-
-  useEffect(() => {
-    const currMonthOper = operation.filter((el) => el.date.includes(`${now}`));
-
-    const income = currMonthOper
-      .filter((el) => el.selectName === "income")
-      .reduce((sum, op) => {
-        return (sum += Number(op.amount));
-      }, 0);
-
-    const expense = currMonthOper
-      .filter((el) => el.selectName === "expense")
-      .reduce((sum, op) => {
-        return (sum += Number(op.amount));
-      }, 0);
-
-    const expenceCategory = currMonthOper
-      .filter((el) => el.selectName === "expense")
-      .reduce((acc, curr) => {
-        const existing = acc.find((item) => item.category === curr.category);
-
-        if (existing) {
-          existing.amount += Number(curr.amount);
-        } else {
-          acc.push({
-            category: curr.category,
-            amount: Number(curr.amount),
-          });
-        }
-
-        return acc;
-      }, [])
-      .sort((a, b) => b.amount - a.amount);
-
-    calculateBalance();
-    setExpenceCategory(expenceCategory);
-    setResultAmount({ resultIncome: income, resultExpense: expense });
-    setMonthOperation(currMonthOper);
-  }, [operation]);
-
-  //FUNCTION
-
-  function addOperation() {
-    const now = new Date().toLocaleDateString("ru-RU");
-
-    const newOperation = {
-      id,
-      selectName,
-      amount,
-      category,
-      komment,
-      date: now,
-    };
-
-    setOperation((prev) => [newOperation, ...prev]);
-
-    setSetectName("income");
-    setAmount("");
-    setCategory("");
-    setKomment("");
-
-    id++;
-    localStorage.setItem("id", JSON.stringify(id));
-    localStorage.setItem(
-      "operations",
-      JSON.stringify([newOperation, ...operation])
-    );
-  }
-
-  function showOperation(id) {
-    const clickCurrentOperation = operation.filter((el) => el.id === id);
-    setCurrentOperation(clickCurrentOperation);
-    setIsShowOperation(true);
-  }
-
-  function deleteOperation(id) {
-    const operations = operation.filter((el) => el.id != id);
-    setOperation(operations);
-
-    localStorage.setItem("operations", JSON.stringify(operations));
-  }
-
-  function calculateBalance() {
-    setCurrentBalance(
-      operation.reduce((sum, el) => {
-        return el.selectName === "income"
-          ? (sum += Number(el.amount))
-          : (sum -= Number(el.amount));
-      }, 0)
-    );
-  }
-
-  //Logic Operation
-
-  const filterResult = monthOperation.filter((el) => {
-    const searchInput = el.category
-      .toLowerCase()
-      .includes(searchValue.toLowerCase());
-    const searchFilterType =
-      filterOperation === "all" ? true : el.selectName === filterOperation;
-
-    return searchInput && searchFilterType;
-  });
-
-  const formattedTotal = new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: "RUB",
-    minimumFractionDigits: 0,
-  }).format(currentBalance);
-
-  const formattedIncome = new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: "RUB",
-    minimumFractionDigits: 0,
-  }).format(resultAmount.resultIncome);
-
-  const formattedExpense = new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: "RUB",
-    minimumFractionDigits: 0,
-  }).format(resultAmount.resultExpense);
+  const {
+    setSwitchValue,
+    switchValue,
+    formattedTotal,
+    filterResult,
+    expenceCategory,
+    isShowOperation,
+    formattedIncome,
+    formattedExpense,
+  } = useContext(operationContext);
 
   return (
-    <div className="container">
-      <h1>💰 Финансовый трекер</h1>
-      <header>
-        <button className="button" onClick={() => setSwitchValue("main")}>
-          Новая операция
-        </button>
-        <button className="button" onClick={() => setSwitchValue("history")}>
-          История операций
-        </button>
-      </header>
-
-      {switchValue === "main" && (
-        <>
-          <Inputzone
-            addOperation={addOperation}
-            setSetectName={setSetectName}
-            selectName={selectName}
-            setAmount={setAmount}
-            amount={amount}
-            setCategory={setCategory}
-            category={category}
-            setKomment={setKomment}
-            komment={komment}
-          />
-
-          <h3 className="currentBalans balance">
-            Текущий баланс: {formattedTotal}
-          </h3>
-          <Operation
-            operation={operation}
-            setSearchValue={setSearchValue}
-            setOperation={setOperation}
-            searchValue={searchValue}
-            setFilterOperation={setFilterOperation}
+    <>
+      <Header />
+      <main className="max-w-[40%] m-auto flex flex-col gap-5 mt-10">
+        <div className="flex gap-5">
+          <button
+            className="w-[50%] bg-btn-first p-3 text-white rounded-[0.5rem] cursor-pointer hover:bg-btn-hover duration-300"
+            onClick={() => setSwitchValue("main")}
           >
-            {filterResult.map((el) => (
-              <OperationList
-                key={el.id}
-                id={el.id}
-                selectName={el.selectName}
-                amount={el.amount}
-                category={el.category}
-                showOperation={showOperation}
-                deleteOperation={deleteOperation}
-                date={el.date}
-              />
-            ))}
-          </Operation>
-          <Expenses expenceCategory={expenceCategory}>
-            {expenceCategory.map((el) => (
-              <ExpensesList
-                key={el.category}
-                category={el.category}
-                amount={el.amount}
-              />
-            ))}
-          </Expenses>
-          {isShowOperation && (
-            <ModalOperation
-              currentOperation={currentOperation}
-              setIsShowOperation={setIsShowOperation}
-              setOperation={setOperation}
-              operation={operation}
-            />
-          )}
-          <section>
-            <div className="result-container card">
-              <h2>Итого</h2>
-              <div className="result-container__block">
-                <div className="result-container__text">
-                  <div className="result__income">
-                    <p>Доходы</p>
-                    <div className="result__amount">{formattedIncome}</div>
-                  </div>
-                  <div className="result__expense">
-                    <p>Расходы</p>
-                    <div className="result__amount">{formattedExpense}</div>
+            Новая операция
+          </button>
+          <button
+            className="w-[50%] bg-btn-first p-3 text-white rounded-[0.5rem] cursor-pointer hover:bg-btn-hover duration-300"
+            onClick={() => setSwitchValue("history")}
+          >
+            История операций
+          </button>
+        </div>
+
+        {switchValue === "main" && (
+          <>
+            <Inputzone />
+            <h3 className="m-auto text-center text-[1.2rem] font-normal border-2 border-col-border p-2 w-[50%] rounded-[0.5rem]">
+              Текущий баланс: {formattedTotal}
+            </h3>
+            <Section>
+              <Operation>
+                {filterResult.map((el) => (
+                  <OperationList
+                    key={el.id}
+                    id={el.id}
+                    selectName={el.selectName}
+                    amount={el.amount}
+                    category={el.category}
+                    date={el.date}
+                  />
+                ))}
+              </Operation>
+            </Section>
+            <Section>
+              <Expenses>
+                {expenceCategory.map((el) => (
+                  <ExpensesList
+                    key={el.category}
+                    category={el.category}
+                    amount={el.amount}
+                  />
+                ))}
+              </Expenses>
+            </Section>
+            {isShowOperation && <ModalOperation />}
+            <Section>
+              <div className="flex flex-col">
+                <h2 className="text-[1.3rem] font-bold">Итого</h2>
+                <div className="mt-1">
+                  <div className="flex flex-col gap-1">
+                    <div className="flex justify-between items-center">
+                      <p>Доходы</p>
+                      <div className="font-bold">{formattedIncome}</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <p>Расходы</p>
+                      <div className="font-bold">{formattedExpense}</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
-        </>
-      )}
-      {switchValue === "history" && (
-        <>
-          <History
-            operation={operation}
-            monthOperation={monthOperation}
-          ></History>
-        </>
-      )}
-    </div>
+            </Section>
+          </>
+        )}
+        {switchValue === "history" && (
+          <>
+            <History />
+          </>
+        )}
+      </main>
+      <Footer />
+    </>
   );
 }
 

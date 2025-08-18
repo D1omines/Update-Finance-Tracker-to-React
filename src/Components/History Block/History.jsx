@@ -1,10 +1,14 @@
 import HistoryBar from "./HistoryBar";
 import HistoryList from "./HistoryList";
 import HistiryMonths from "./HistoryMonths";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import HistoryTotal from "./HistoryTotal";
+import { operationContext } from "../Layout";
+import Section from "../Section";
 
-export default function History({ operation, monthOperation }) {
+export default function History() {
+  const { operation, monthOperation } = useContext(operationContext);
+
   const [currentMonthOperation, setCurrentMonthOperation] = useState([]);
   const [styleCurrMonth, setStyleCurrMonth] = useState("");
   const [nameMonth, setNameMonth] = useState("");
@@ -67,11 +71,14 @@ export default function History({ operation, monthOperation }) {
 
   return (
     <>
-      <HistiryMonths
-        changeMonth={changeMonth}
-        styleCurrMonth={styleCurrMonth}
-      />
-      <section>
+      <Section>
+        <HistiryMonths
+          changeMonth={changeMonth}
+          styleCurrMonth={styleCurrMonth}
+        />
+      </Section>
+
+      <Section>
         <HistoryBar
           nameMonth={nameMonth}
           incomeOpeeration={incomeOpeeration}
@@ -79,7 +86,9 @@ export default function History({ operation, monthOperation }) {
           remains={remains}
           operationData={operationData}
         />
+      </Section>
 
+      <Section>
         <HistoryTotal>
           {currentMonthOperation.map((el) => (
             <HistoryList
@@ -92,7 +101,7 @@ export default function History({ operation, monthOperation }) {
             ></HistoryList>
           ))}
         </HistoryTotal>
-      </section>
+      </Section>
     </>
   );
 }

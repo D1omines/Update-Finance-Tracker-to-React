@@ -1,14 +1,19 @@
-export default function Inputzone({
-  addOperation,
-  setSetectName,
-  selectName,
-  setAmount,
-  amount,
-  setCategory,
-  category,
-  setKomment,
-  komment,
-}) {
+import { useContext } from "react";
+import { operationContext } from "./Layout";
+
+export default function Inputzone() {
+  const {
+    addOperation,
+    setSetectName,
+    selectName,
+    setAmount,
+    amount,
+    setCategory,
+    category,
+    setKomment,
+    komment,
+  } = useContext(operationContext);
+
   function clearDefautl(event) {
     event.preventDefault();
     addOperation();
@@ -54,7 +59,10 @@ export default function Inputzone({
           placeholder="Комментарий (необязательно)"
           onChange={(e) => setKomment(e.target.value)}
         />
-        <button className="form__btn" type="submit">
+        <button
+          className=" bg-btn-first p-3 text-white rounded-[0.5rem] cursor-pointer hover:bg-btn-hover duration-300"
+          type="submit"
+        >
           + Добавить операцию
         </button>
       </form>

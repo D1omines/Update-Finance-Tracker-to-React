@@ -9,35 +9,43 @@ export default function HistoryBar({
   operationData,
 }) {
   return (
-    <div className="card-info">
-      <div className="month__data container-mini">
-        <h3>{nameMonth}</h3>
-
-        <div style={{ height: "300px" }} className="month_data-graphics">
+    <div className="flex justify-between gap-10">
+      <div className="bg-container-mini p-3 rounded-[0.5rem] shadow-section-mini flex flex-col justify-between ">
+        <h3 className="text-[1.3rem] font-bold">{nameMonth}</h3>
+        <div className="h-[60%]">
           <BarChart
             incomeOpeeration={incomeOpeeration}
             expenseOpeeration={expenseOpeeration}
           />
         </div>
-        <div className="month__total-remains">
-          <p>Доходы: {incomeOpeeration}₽</p>
-          <p>Расходы: {expenseOpeeration}₽</p>
-          <p>Остаток: {remains}₽</p>
+        <div className="">
+          <p className="bg-expenceList mb-2 text-white p-1 rounded-[0.5rem]">
+            Доходы: {incomeOpeeration}₽
+          </p>
+          <p className="bg-expenceList mb-2 text-white p-1 rounded-[0.5rem]">
+            Расходы: {expenseOpeeration}₽
+          </p>
+          <p className="bg-expenceList mb-2 text-white p-1 rounded-[0.5rem]">
+            Остаток: {remains}₽
+          </p>
         </div>
       </div>
 
-      <div className="month__total container-mini">
-        <h4>Основные расходы</h4>
+      <div className="bg-container-mini p-3 rounded-[0.5rem] shadow-section-mini flex flex-col justify-between ">
+        <h4 className="text-[1.3rem] font-bold">Основные расходы</h4>
 
-        <div className="month__total-stats">
-          <div className="month__total-graphics">
-            <ExpenseChart data={operationData} />
-          </div>
-          <div className="month__total-values">
-            {operationData.map((el) => (
-              <p key={el.category}>{el.category}</p>
-            ))}
-          </div>
+        <div className="my-5">
+          <ExpenseChart data={operationData} />
+        </div>
+        <div>
+          {operationData.map((el) => (
+            <p
+              className="bg-expenceList mb-2 text-white p-1 rounded-[0.5rem]"
+              key={el.category}
+            >
+              {el.category}
+            </p>
+          ))}
         </div>
       </div>
     </div>

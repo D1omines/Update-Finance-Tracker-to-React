@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { operationContext } from "./Layout";
+import Button from "./Button";
 
-export default function ModalOperation({
-  currentOperation,
-  setIsShowOperation,
-  setOperation,
-  operation,
-}) {
+export default function ModalOperation({}) {
+  const {
+    currentOperation,
+    setIsShowOperation,
+    setOperation,
+    operation,
+    closeModal,
+  } = useContext(operationContext);
+
   const [{ id, category, amount, date, komment }] = currentOperation;
 
   const [currentAmount, setCurrentAmount] = useState(amount);
@@ -24,74 +29,60 @@ export default function ModalOperation({
   }
 
   return (
-    <div className="modal__card">
-      <div className="modal__card-container">
-        <h3 className="modal__card-container-title">
-          {`Операция № ${id}`}
-          <span className="modal__card-container-titleId"></span>
-        </h3>
-        <div className="modal__card-container-data">
-          <div className="modal__card-container-data-category">
-            <p className="modal__card-container-data-category-text media-padding">
-              Категория
-            </p>
+    <div
+      className="modalOut fixed z-50 top-0 right-0 w-[100%] h-[100vh] bg-modal flex justify-center items-center"
+      onClick={(e) => closeModal(e.target.className)}
+    >
+      <div className="bg-white p-10 rounded-2xl flex flex-col text-center">
+        <h3 className="font-bold text-[1.2rem]">{`Операция № ${id}`}</h3>
+        <div className="flex items-center justify-around gap-5 mt-5">
+          <div className="flex flex-col">
+            <p className="flex mb-2 font-semibold">Категория</p>
             <input
-              className="modal__card-container-data-category-input"
+              className="border-1 border-stone-400 p-1 rounded-[0.3rem]"
               type="text"
               value={category}
               readOnly
             />
           </div>
 
-          <div className="modal__card-container-data-operation">
-            <p className="modal__card-container-data-operation-text media-padding">
-              Доход / Расход
-            </p>
+          <div className="flex flex-col">
+            <p className="flex mb-2 font-semibold">Доход / Расход</p>
             <input
-              className="modal__card-container-data-operation-input"
+              className="border-1 border-stone-400 p-1 rounded-[0.3rem]"
               type="text"
               value={currentAmount}
               onChange={(e) => setCurrentAmount(e.target.value)}
             />
           </div>
 
-          <div className="modal__card-container-data-date">
-            <p className="modal__card-container-data-date-text media-padding">
-              Дата операции
-            </p>
+          <div className="flex flex-col">
+            <p className="flex mb-2 font-semibold">Дата операции</p>
             <input
-              className="modal__card-container-data-date-input"
+              className="border-1 border-stone-400 p-1 rounded-[0.3rem]"
               type="text"
               value={date}
               readOnly
             />
           </div>
 
-          <div className="modal__card-container-data-komment">
-            <p className="modal__card-container-data-komment-text media-padding">
-              Коментарий
-            </p>
+          <div className="flex flex-col">
+            <p className="flex mb-2 font-semibold">Коментарий</p>
             <input
-              className="modal__card-container-data-komment-input"
+              className="border-1 border-stone-400 p-1 rounded-[0.3rem]"
               type="text"
               value={currentKomment}
               onChange={(e) => setCurrentKomment(e.target.value)}
             />
           </div>
         </div>
-        <div className="modal__card-container-btn">
-          <button
-            className="modal-save btn-modal"
-            onClick={saveOperationChange}
-          >
+        <div className="flex justify-center items-center gap-3 mt-10">
+          <Button style="w-[20%]" func={saveOperationChange}>
             Сохранить
-          </button>
-          <button
-            className="modal-close btn-modal"
-            onClick={() => setIsShowOperation(false)}
-          >
+          </Button>
+          <Button style="w-[20%]" func={setIsShowOperation}>
             Закрыть
-          </button>
+          </Button>
         </div>
       </div>
     </div>

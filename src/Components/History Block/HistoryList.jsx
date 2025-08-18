@@ -7,19 +7,18 @@ export default function HistoryList({
 }) {
   return (
     <li
-      className="monthlyExpenses__item"
+      className="flex items-center justify-between border-b-1 border-stone-400"
       data-id={id}
-      onClick={() => showOperation(id)}
     >
-      <p className="monthlyExpenses__item-description">
-        <span className="monthlyExpenses__item-price">
+      <p className="flex justify-start w-[40%]">
+        <span className="w-[30%]">
           {selectName === "income" ? "+" : "-"}
           {amount}₽
         </span>{" "}
         {""}
-        <span className="monthlyExpenses__item-category">{category}</span>
+        <span>{category}</span>
       </p>
-      <p className="monthlyExpenses__item-date">{date}</p>
+      <p>{date}</p>
     </li>
   );
 }
