@@ -1,6 +1,9 @@
+import { useContext } from "react";
 import Button from "../Button";
+import { historyContext } from "./History";
 
-export default function HistiryMonths({ changeMonth, styleCurrMonth }) {
+export default function HistiryMonths() {
+  const { changeMonth, styleCurrMonth } = useContext(historyContext);
   return (
     <div className="flex flex-col gap-5">
       <h2 className="text-[1.3rem] font-bold">Расходы по месяцам</h2>

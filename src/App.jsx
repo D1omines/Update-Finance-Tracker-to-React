@@ -3,9 +3,8 @@ import Footer from "./Components/Footer";
 import Section from "./Components/Section";
 import Inputzone from "./Components/InputZone";
 import Operation from "./Components/Operation";
-import OperationList from "./Components/OperationList";
+
 import Expenses from "./Components/Expenses";
-import ExpensesList from "./Components/ExpensesList";
 import ModalOperation from "./Components/ModalOperation";
 
 import History from "./Components/History Block/History";
@@ -17,8 +16,6 @@ function App() {
     setSwitchValue,
     switchValue,
     formattedTotal,
-    filterResult,
-    expenceCategory,
     isShowOperation,
     formattedIncome,
     formattedExpense,
@@ -50,29 +47,10 @@ function App() {
               Текущий баланс: {formattedTotal}
             </h3>
             <Section>
-              <Operation>
-                {filterResult.map((el) => (
-                  <OperationList
-                    key={el.id}
-                    id={el.id}
-                    selectName={el.selectName}
-                    amount={el.amount}
-                    category={el.category}
-                    date={el.date}
-                  />
-                ))}
-              </Operation>
+              <Operation />
             </Section>
             <Section>
-              <Expenses>
-                {expenceCategory.map((el) => (
-                  <ExpensesList
-                    key={el.category}
-                    category={el.category}
-                    amount={el.amount}
-                  />
-                ))}
-              </Expenses>
+              <Expenses />
             </Section>
             {isShowOperation && <ModalOperation />}
             <Section>

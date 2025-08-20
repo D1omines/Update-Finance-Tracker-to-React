@@ -1,13 +1,14 @@
 import HistoryBar from "./HistoryBar";
-import HistoryList from "./HistoryList";
 import HistiryMonths from "./HistoryMonths";
-import { useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import HistoryTotal from "./HistoryTotal";
 import { operationContext } from "../Layout";
 import Section from "../Section";
 
+export const historyContext = createContext();
+
 export default function History() {
-  const { operation, monthOperation } = useContext(operationContext);
+  const { operations, monthOperation } = useContext(operationContext);
 
   const [currentMonthOperation, setCurrentMonthOperation] = useState([]);
   const [styleCurrMonth, setStyleCurrMonth] = useState("");
@@ -28,13 +29,18 @@ export default function History() {
     "Декабрь",
   ];
 
+  const expenceCategoryMonth = currentMonthOperation
+    .filter((op) => op.selectName === "expense")
+    .sort((a, b) => b.amount - a.amount)
+    .slice(0, 3);
+
   useEffect(() => {
     const now = String(new Date().getMonth() + 1).padStart(2, "0");
 
     setCurrentMonthOperation(monthOperation);
     setStyleCurrMonth(now);
     setNameMonth(monthName[Number(now - 1)]);
-  }, [operation]);
+  }, [operations]);
 
   const operationFilter = currentMonthOperation
     .filter((el) => el.selectName === "expense")
@@ -60,7 +66,7 @@ export default function History() {
   const remains = incomeOpeeration - expenseOpeeration;
 
   function changeMonth(month) {
-    const currMonthOper = operation.filter((el) =>
+    const currMonthOper = operations.filter((el) =>
       el.date.includes(`${month}`)
     );
 
@@ -70,38 +76,30 @@ export default function History() {
   }
 
   return (
-    <>
+    <historyContext.Provider
+      value={{
+        changeMonth,
+        styleCurrMonth,
+        nameMonth,
+        incomeOpeeration,
+        expenseOpeeration,
+        remains,
+        operationData,
+        currentMonthOperation,
+        expenceCategoryMonth,
+      }}
+    >
       <Section>
-        <HistiryMonths
-          changeMonth={changeMonth}
-          styleCurrMonth={styleCurrMonth}
-        />
+        <HistiryMonths />
       </Section>
 
       <Section>
-        <HistoryBar
-          nameMonth={nameMonth}
-          incomeOpeeration={incomeOpeeration}
-          expenseOpeeration={expenseOpeeration}
-          remains={remains}
-          operationData={operationData}
-        />
+        <HistoryBar />
       </Section>
 
       <Section>
-        <HistoryTotal>
-          {currentMonthOperation.map((el) => (
-            <HistoryList
-              key={el.id}
-              selectName={el.selectName}
-              id={el.id}
-              date={el.date}
-              amount={el.amount}
-              category={el.category}
-            ></HistoryList>
-          ))}
-        </HistoryTotal>
+        <HistoryTotal />
       </Section>
-    </>
+    </historyContext.Provider>
   );
 }

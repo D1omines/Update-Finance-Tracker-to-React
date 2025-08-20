@@ -2,29 +2,29 @@ import { useContext, useState } from "react";
 import { operationContext } from "./Layout";
 import Button from "./Button";
 
-export default function ModalOperation({}) {
+export default function ModalOperation() {
   const {
     currentOperation,
     setIsShowOperation,
-    setOperation,
-    operation,
+    operations,
     closeModal,
+    dispatch,
   } = useContext(operationContext);
 
-  const [{ id, category, amount, date, komment }] = currentOperation;
+  const { id, category, amount, date, komment } = currentOperation;
 
   const [currentAmount, setCurrentAmount] = useState(amount);
   const [currentKomment, setCurrentKomment] = useState(komment);
 
   function saveOperationChange() {
-    const updatedOperations = operation.map((el) =>
+    const updatedOperations = operations.map((el) =>
       el.id === id
         ? { ...el, amount: currentAmount, komment: currentKomment }
         : el
     );
 
-    setOperation(updatedOperations);
     localStorage.setItem("operations", JSON.stringify(updatedOperations));
+    dispatch({ type: "changeSave_operation", payload: updatedOperations });
     setIsShowOperation(false);
   }
 

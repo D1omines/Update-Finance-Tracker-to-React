@@ -2,17 +2,8 @@ import { useContext } from "react";
 import { operationContext } from "./Layout";
 
 export default function Inputzone() {
-  const {
-    addOperation,
-    setSetectName,
-    selectName,
-    setAmount,
-    amount,
-    setCategory,
-    category,
-    setKomment,
-    komment,
-  } = useContext(operationContext);
+  const { addOperation, setFormInput, formInput } =
+    useContext(operationContext);
 
   function clearDefautl(event) {
     event.preventDefault();
@@ -24,8 +15,10 @@ export default function Inputzone() {
       <form className="form" id="transaction-form" onSubmit={clearDefautl}>
         <select
           id="type"
-          value={selectName}
-          onChange={(e) => setSetectName(e.target.value)}
+          value={formInput.selectValue}
+          onChange={(e) =>
+            setFormInput((prev) => ({ ...prev, selectValue: e.target.value }))
+          }
         >
           <option value="income">Доход</option>
           <option value="expense">Расход</option>
@@ -36,28 +29,30 @@ export default function Inputzone() {
           inputMode="decimal"
           id="amount"
           placeholder="Сумма"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          id="category"
-          value={category}
-          placeholder="Категория"
+          value={formInput.amountValue}
           onChange={(e) =>
-            setCategory(
-              e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1)
-            )
+            setFormInput((prev) => ({ ...prev, amountValue: e.target.value }))
           }
           required
         />
         <input
           type="text"
-          value={komment}
+          id="category"
+          value={formInput.categoryValue}
+          placeholder="Категория"
+          onChange={(e) =>
+            setFormInput((prev) => ({ ...prev, categoryValue: e.target.value }))
+          }
+          required
+        />
+        <input
+          type="text"
+          value={formInput.kommentValue}
           id="komment"
           placeholder="Комментарий (необязательно)"
-          onChange={(e) => setKomment(e.target.value)}
+          onChange={(e) =>
+            setFormInput((prev) => ({ ...prev, kommentValue: e.target.value }))
+          }
         />
         <button
           className=" bg-btn-first p-3 text-white rounded-[0.5rem] cursor-pointer hover:bg-btn-hover duration-300"

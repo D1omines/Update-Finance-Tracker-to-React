@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { operationContext } from "./Layout";
 
-export default function Expenses({ children }) {
+export default function Expenses() {
   const { expenceCategory } = useContext(operationContext);
 
   return (
@@ -14,7 +14,17 @@ export default function Expenses({ children }) {
       ) : (
         ""
       )}
-      <ul className="mt-[1.3rem] flex flex-col gap-3">{children}</ul>
+      <ul className="mt-[1.3rem] flex flex-col gap-3">
+        {expenceCategory.map((el) => (
+          <li
+            key={el.category}
+            className="flex justify-between bg-expenceList text-white p-1 rounded-[0.3rem]"
+          >
+            <p>{el.category}</p>
+            <p className="font-bold">{el.amount}₽</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

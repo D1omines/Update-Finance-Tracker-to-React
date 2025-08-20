@@ -1,203 +1,188 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useMemo, useReducer, useState } from "react";
 
 export const operationContext = createContext();
 
-export function Layout({ children }) {
-  //Switch State
-  const [switchValue, setSwitchValue] = useState("main");
-  //App State
-  const [selectName, setSetectName] = useState("income");
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState("");
-  const [komment, setKomment] = useState("");
-  const [operation, setOperation] = useState([]);
-  const [currentOperation, setCurrentOperation] = useState({});
-  const [monthOperation, setMonthOperation] = useState([]);
-  const [currentBalance, setCurrentBalance] = useState(0);
+function operationsReducer(state, action) {
+  switch (action.type) {
+    case "init_operations": {
+      return Array.isArray(action.payload) ? action.payload : [];
+    }
+    case "add_operation": {
+      return [action.payload, ...state];
+    }
+    case "delete_operation": {
+      return state.filter((op) => op.id !== action.payload);
+    }
+    case "changeSave_operation": {
+      return (state = action.payload);
+    }
+    default:
+      return state;
+  }
+}
 
-  //Operation State
+const RUB = { style: "currency", currency: "RUB", minimumFractionDigits: 0 };
+const fmt = (n) => new Intl.NumberFormat("ru-RU", RUB).format(n);
+
+export function Layout({ children }) {
+  const [operations, dispatch] = useReducer(operationsReducer, []);
+
+  // UI‑состояния
+  const [switchValue, setSwitchValue] = useState("main");
+  const [currentOperation, setCurrentOperation] = useState(null);
   const [filterOperation, setFilterOperation] = useState("all");
   const [searchValue, setSearchValue] = useState("");
-
-  //Expence State
-  const [expenceCategory, setExpenceCategory] = useState([]);
-
-  //Total State
-  const [resultAmount, setResultAmount] = useState({
-    resultIncome: 0,
-    resultExpense: 0,
-  });
-
-  //History State
-
-  //Modal State
   const [isShowOperation, setIsShowOperation] = useState(false);
 
-  let id = JSON.parse(localStorage.getItem("id") || 1);
-  const date = new Date();
-  const now = String(date.getMonth() + 1).padStart(2, "0");
+  // Форма
+  const [formInput, setFormInput] = useState({
+    selectValue: "income",
+    amountValue: "",
+    categoryValue: "",
+    kommentValue: "",
+  });
 
   useEffect(() => {
-    setOperation(JSON.parse(localStorage.getItem("operations")) || []);
-    calculateBalance();
+    const saved = JSON.parse(localStorage.getItem("operations") || "[]");
+    dispatch({ type: "init_operations", payload: saved });
+
+    if (!localStorage.getItem("id")) localStorage.setItem("id", "1");
   }, []);
 
   useEffect(() => {
-    const currMonthOper = operation.filter((el) => el.date.includes(`${now}`));
+    localStorage.setItem("operations", JSON.stringify(operations));
+  }, [operations]);
 
-    const income = currMonthOper
-      .filter((el) => el.selectName === "income")
-      .reduce((sum, op) => {
-        return (sum += Number(op.amount));
-      }, 0);
+  const nowMonth = String(new Date().getMonth() + 1).padStart(2, "0");
 
-    const expense = currMonthOper
-      .filter((el) => el.selectName === "expense")
-      .reduce((sum, op) => {
-        return (sum += Number(op.amount));
-      }, 0);
+  const monthOperation = useMemo(
+    () => operations.filter((op) => op.date.includes(`${nowMonth}`)),
+    [operations, nowMonth]
+  );
 
-    const expenceCategory = currMonthOper
-      .filter((el) => el.selectName === "expense")
+  const { resultIncome, resultExpense, currentBalance } = useMemo(() => {
+    const income = monthOperation
+      .filter((op) => op.selectName === "income")
+      .reduce((s, op) => s + Number(op.amount), 0);
+
+    const expense = monthOperation
+      .filter((op) => op.selectName === "expense")
+      .reduce((s, op) => s + Number(op.amount), 0);
+
+    const balance = operations.reduce((sum, op) => {
+      const val = Number(op.amount) || 0;
+      return op.selectName === "income" ? sum + val : sum - val;
+    }, 0);
+
+    return {
+      resultIncome: income,
+      resultExpense: expense,
+      currentBalance: balance,
+    };
+  }, [monthOperation, operations]);
+
+  const expenceCategory = useMemo(() => {
+    return monthOperation
+      .filter((op) => op.selectName === "expense")
       .reduce((acc, curr) => {
-        const existing = acc.find((item) => item.category === curr.category);
-
-        if (existing) {
-          existing.amount += Number(curr.amount);
-        } else {
-          acc.push({
-            category: curr.category,
-            amount: Number(curr.amount),
-          });
-        }
-
+        const hit = acc.find((i) => i.category === curr.category);
+        if (hit) hit.amount += Number(curr.amount);
+        else acc.push({ category: curr.category, amount: Number(curr.amount) });
         return acc;
       }, [])
       .sort((a, b) => b.amount - a.amount);
+  }, [monthOperation]);
 
-    calculateBalance();
-    setExpenceCategory(expenceCategory);
-    setResultAmount({ resultIncome: income, resultExpense: expense });
-    setMonthOperation(currMonthOper);
-  }, [operation]);
-
-  //FUNCTION
+  const filterResult = useMemo(() => {
+    return monthOperation.filter((op) => {
+      const matchesText = op.category
+        .toLowerCase()
+        .includes(searchValue.toLowerCase());
+      const matchesType =
+        filterOperation === "all" ? true : op.selectName === filterOperation;
+      return matchesText && matchesType;
+    });
+  }, [monthOperation, searchValue, filterOperation]);
 
   function addOperation() {
+    const id = Number(localStorage.getItem("id") || "1");
     const now = new Date().toLocaleDateString("ru-RU");
 
     const newOperation = {
       id,
-      selectName,
-      amount,
-      category,
-      komment,
+      selectName: formInput.selectValue,
+      amount: formInput.amountValue,
+      category: formInput.categoryValue,
+      komment: formInput.kommentValue,
       date: now,
     };
 
-    setOperation((prev) => [newOperation, ...prev]);
+    dispatch({ type: "add_operation", payload: newOperation });
 
-    setSetectName("income");
-    setAmount("");
-    setCategory("");
-    setKomment("");
-
-    id++;
-    localStorage.setItem("id", JSON.stringify(id));
-    localStorage.setItem(
-      "operations",
-      JSON.stringify([newOperation, ...operation])
-    );
-  }
-
-  function showOperation(id) {
-    const clickCurrentOperation = operation.filter((el) => el.id === id);
-    setCurrentOperation(clickCurrentOperation);
-    setIsShowOperation(true);
+    localStorage.setItem("id", String(id + 1));
+    setFormInput({
+      selectValue: "income",
+      amountValue: "",
+      categoryValue: "",
+      kommentValue: "",
+    });
   }
 
   function deleteOperation(id) {
-    const operations = operation.filter((el) => el.id != id);
-    setOperation(operations);
-
-    localStorage.setItem("operations", JSON.stringify(operations));
+    dispatch({ type: "delete_operation", payload: id });
   }
 
-  function calculateBalance() {
-    setCurrentBalance(
-      operation.reduce((sum, el) => {
-        return el.selectName === "income"
-          ? (sum += Number(el.amount))
-          : (sum -= Number(el.amount));
-      }, 0)
-    );
+  function showOperation(id) {
+    const op = operations.find((o) => o.id === id) || null;
+
+    setCurrentOperation(op);
+    setIsShowOperation(true);
   }
 
-  function closeModal(value) {
-    const isClose = value.split(" ");
-    isClose.some((el) => el === "modalOut") ? setIsShowOperation(false) : "";
+  function closeModal(classListStr) {
+    const isClose = classListStr.split(" ").includes("modalOut");
+    if (isClose) setIsShowOperation(false);
   }
 
-  //Logic Operation
-
-  const filterResult = monthOperation.filter((el) => {
-    const searchInput = el.category
-      .toLowerCase()
-      .includes(searchValue.toLowerCase());
-    const searchFilterType =
-      filterOperation === "all" ? true : el.selectName === filterOperation;
-
-    return searchInput && searchFilterType;
-  });
-
-  const formattedTotal = new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: "RUB",
-    minimumFractionDigits: 0,
-  }).format(currentBalance);
-
-  const formattedIncome = new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: "RUB",
-    minimumFractionDigits: 0,
-  }).format(resultAmount.resultIncome);
-
-  const formattedExpense = new Intl.NumberFormat("ru-RU", {
-    style: "currency",
-    currency: "RUB",
-    minimumFractionDigits: 0,
-  }).format(resultAmount.resultExpense);
+  const formattedTotal = fmt(currentBalance);
+  const formattedIncome = fmt(resultIncome);
+  const formattedExpense = fmt(resultExpense);
 
   return (
     <operationContext.Provider
       value={{
-        setSwitchValue,
-        switchValue,
-        addOperation,
-        setSetectName,
-        selectName,
-        setAmount,
-        amount,
-        setCategory,
-        category,
-        setKomment,
-        komment,
-        setSearchValue,
-        searchValue,
-        setOperation,
-        setFilterOperation,
-        operation,
-        showOperation,
-        deleteOperation,
-        setIsShowOperation,
-        currentOperation,
+        // данные
+        operations,
         monthOperation,
         expenceCategory,
-        formattedTotal,
         filterResult,
-        isShowOperation,
+        currentOperation,
+
+        // форматированные суммы
+        formattedTotal,
         formattedIncome,
+        formattedExpense,
+
+        // ui
+        switchValue,
+        setSwitchValue,
+        isShowOperation,
+        setIsShowOperation,
+        searchValue,
+        setSearchValue,
+        filterOperation,
+        setFilterOperation,
+
+        // форма
+        formInput,
+        setFormInput,
+
+        // экшены
+        addOperation,
+        deleteOperation,
+        showOperation,
         closeModal,
+        dispatch,
       }}
     >
       {children}

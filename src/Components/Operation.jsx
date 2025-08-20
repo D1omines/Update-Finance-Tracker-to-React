@@ -2,11 +2,18 @@ import { useContext } from "react";
 import { operationContext } from "./Layout";
 import Button from "./Button";
 
-export default function Operation({ children }) {
-  const { operation, setSearchValue, searchValue, setFilterOperation } =
-    useContext(operationContext);
+export default function Operation() {
+  const {
+    operations,
+    setSearchValue,
+    searchValue,
+    setFilterOperation,
+    filterResult,
+    showOperation,
+    deleteOperation,
+  } = useContext(operationContext);
   return (
-    <section>
+    <>
       <div className="flex items-center justify-between">
         <h2 className="text-[1.3rem] font-bold">Операции в этом месяце</h2>
         <input
@@ -32,12 +39,41 @@ export default function Operation({ children }) {
           Очистить фильтр
         </Button>
       </div>
-      {operation.length === 0 ? (
+      {operations.length === 0 ? (
         <p className="info-title-null operation-title-null">Нет операций</p>
       ) : (
         ""
       )}
-      <ul className="mt-[1rem]">{children}</ul>
-    </section>
+      <ul className="mt-[1rem] min-h-70 max-h-150 overflow-y-scroll">
+        {filterResult.map((el) => (
+          <li
+            key={el.id}
+            className={`${
+              el.selectName === "income" ? "text-green-600" : "text-red-500"
+            } flex items-center justify-between my-2 p-1 cursor-pointer border-b-1 border-stone-300 hover:bg-blue-100 duration-200`}
+            data-id={el.id}
+            onClick={() => showOperation(el.id)}
+          >
+            <p className="w-[14rem]">
+              <span>
+                {el.selectName === "income" ? "+" : "-"}
+                {el.amount}₽
+              </span>{" "}
+              {""}
+              <span>{el.category}</span>
+            </p>
+            <p className="w-[10rem]">{el.date}</p>
+            <p
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteOperation(el.id);
+              }}
+            >
+              🗑
+            </p>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
