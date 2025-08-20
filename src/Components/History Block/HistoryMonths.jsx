@@ -1,13 +1,38 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Button from "../Button";
 import { historyContext } from "./History";
 
 export default function HistiryMonths() {
   const { changeMonth, styleCurrMonth } = useContext(historyContext);
+  const [monthValue, setMonthValue] = useState("");
+  console.log(monthValue);
+
   return (
     <div className="flex flex-col gap-5">
       <h2 className="text-[1.3rem] font-bold">Расходы по месяцам</h2>
-      <div className="grid grid-cols-6 gap-2 ">
+      <select
+        className="p-1 rounded-[0.5rem] border-2 border-btn-first xl:hidden"
+        id="month"
+        onChange={(e) => {
+          setMonthValue(e.target.value);
+          changeMonth(e.target.value);
+        }}
+      >
+        <option value="01">Январь</option>
+        <option value="02">Февраль</option>
+        <option value="03">Март</option>
+        <option value="04">Апрель</option>
+        <option value="05">Май</option>
+        <option value="06">Июнь</option>
+        <option value="07">Июль</option>
+        <option value="08">Август</option>
+        <option value="09">Сентябрь</option>
+        <option value="10">Октябрь</option>
+        <option value="11">Ноябрь</option>
+        <option value="12">Декабрь</option>
+      </select>
+
+      <div className="hidden xl:grid xl:grid-cols-6 xl:gap-2 ">
         <Button
           style={`${styleCurrMonth === "01" ? "bg-month-active" : ""}`}
           func={changeMonth}

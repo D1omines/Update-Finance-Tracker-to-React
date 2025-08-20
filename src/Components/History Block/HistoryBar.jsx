@@ -14,16 +14,16 @@ export default function HistoryBar() {
   } = useContext(historyContext);
 
   return (
-    <div className="flex justify-between gap-10">
-      <div className="bg-container-mini p-3 rounded-[0.5rem] shadow-section-mini flex flex-col justify-between ">
+    <div className="flex flex-col justify-between gap-0 xl:flex-row xl:gap-5">
+      <div className="bg-container-mini p-3 rounded-[0.5rem] shadow-section-mini flex flex-col justify-between gap-5 xl:w-[50%]">
         <h3 className="text-[1.3rem] font-bold">{nameMonth}</h3>
-        <div className="h-[60%]">
+        <div className="h-[250px]">
           <BarChart
             incomeOpeeration={incomeOpeeration}
             expenseOpeeration={expenseOpeeration}
           />
         </div>
-        <div className="">
+        <div>
           <p className="bg-expenceList mb-2 text-white p-1 rounded-[0.5rem]">
             Доходы: {incomeOpeeration}₽
           </p>
@@ -36,10 +36,9 @@ export default function HistoryBar() {
         </div>
       </div>
 
-      <div className="bg-container-mini p-3 rounded-[0.5rem] shadow-section-mini flex flex-col justify-between ">
-        <h4 className="text-[1.3rem] font-bold">Основные расходы</h4>
-
-        <div className="my-5">
+      <div className="bg-container-mini p-3 rounded-[0.5rem] shadow-section-mini flex flex-col justify-between gap-5 xl:w-[100%]">
+        <h3 className="text-[1.3rem] font-bold">Основные расходы</h3>
+        <div className="h-[250px] m-auto ">
           <ExpenseChart data={operationData} />
         </div>
         <div>

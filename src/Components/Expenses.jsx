@@ -6,7 +6,7 @@ export default function Expenses() {
 
   return (
     <div className="card">
-      <h2 className="text-[1.3rem] font-bold">
+      <h2 className="text-[1.3rem] font-bold text-center">
         Расходы по категориям за месяц
       </h2>
       {!expenceCategory ? (

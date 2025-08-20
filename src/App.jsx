@@ -10,6 +10,7 @@ import ModalOperation from "./Components/ModalOperation";
 import History from "./Components/History Block/History";
 import { useContext } from "react";
 import { operationContext } from "./Components/Layout";
+import Button from "./Components/Button";
 
 function App() {
   const {
@@ -24,26 +25,28 @@ function App() {
   return (
     <>
       <Header />
-      <main className="max-w-[40%] m-auto flex flex-col gap-5 mt-10">
-        <div className="flex gap-5">
-          <button
-            className="w-[50%] bg-btn-first p-3 text-white rounded-[0.5rem] cursor-pointer hover:bg-btn-hover duration-300"
-            onClick={() => setSwitchValue("main")}
+      <main className="max-w-[90%] m-auto flex flex-col gap-5 mt-10 md:w-[60%] xl:w-[50%] 2xl:w-[40%]">
+        <div className="flex flex-col gap-3 lg:flex-row lg:justify-between">
+          <Button
+            style="h-10 lg:w-[50%]"
+            func={setSwitchValue}
+            valueFunc={"main"}
           >
             Новая операция
-          </button>
-          <button
-            className="w-[50%] bg-btn-first p-3 text-white rounded-[0.5rem] cursor-pointer hover:bg-btn-hover duration-300"
-            onClick={() => setSwitchValue("history")}
+          </Button>
+          <Button
+            style="h-10 lg:w-[50%]"
+            func={setSwitchValue}
+            valueFunc={"history"}
           >
             История операций
-          </button>
+          </Button>
         </div>
 
         {switchValue === "main" && (
           <>
             <Inputzone />
-            <h3 className="m-auto text-center text-[1.2rem] font-normal border-2 border-col-border p-2 w-[50%] rounded-[0.5rem]">
+            <h3 className="m-auto text-center text-[1.2rem] font-normal border-2 border-col-border p-2 w-[100%] rounded-[0.5rem]">
               Текущий баланс: {formattedTotal}
             </h3>
             <Section>
@@ -55,7 +58,7 @@ function App() {
             {isShowOperation && <ModalOperation />}
             <Section>
               <div className="flex flex-col">
-                <h2 className="text-[1.3rem] font-bold">Итого</h2>
+                <h2 className="text-[1.3rem] font-bold border-b-2">Итого</h2>
                 <div className="mt-1">
                   <div className="flex flex-col gap-1">
                     <div className="flex justify-between items-center">

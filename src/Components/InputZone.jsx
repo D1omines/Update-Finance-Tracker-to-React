@@ -11,8 +11,12 @@ export default function Inputzone() {
   }
 
   return (
-    <section>
-      <form className="form" id="transaction-form" onSubmit={clearDefautl}>
+    <div>
+      <form
+        className="form flex flex-wrap gap-2 p-[1rem] rounded-2xl shadow-section"
+        id="transaction-form"
+        onSubmit={clearDefautl}
+      >
         <select
           id="type"
           value={formInput.selectValue}
@@ -54,13 +58,14 @@ export default function Inputzone() {
             setFormInput((prev) => ({ ...prev, kommentValue: e.target.value }))
           }
         />
+
         <button
-          className=" bg-btn-first p-3 text-white rounded-[0.5rem] cursor-pointer hover:bg-btn-hover duration-300"
+          className=" bg-btn-first p-3 text-white rounded-[0.5rem] cursor-pointer hover:bg-btn-hover duration-300 w-[100%] xl:w-[50%]"
           type="submit"
         >
           + Добавить операцию
         </button>
       </form>
-    </section>
+    </div>
   );
 }

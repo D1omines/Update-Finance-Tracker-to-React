@@ -14,17 +14,17 @@ export default function Operation() {
   } = useContext(operationContext);
   return (
     <>
-      <div className="flex items-center justify-between">
-        <h2 className="text-[1.3rem] font-bold">Операции в этом месяце</h2>
+      <div className="flex flex-col items-center gap-3 xl:flex-row xl:justify-between">
+        <h2 className="text-[1.3rem] font-bold mb-2">Операции в этом месяце</h2>
         <input
-          className="border-1 border-col-border p-1 rounded-[0.3rem]"
+          className="border-1 border-col-border p-1 rounded-[0.3rem] w-[100%] xl:w-[40%]"
           type="search"
           placeholder="Поиск по категории"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
         />
       </div>
-      <div className="flex mt-5 gap-3">
+      <div className="flex flex-col my-5 gap-3 lg:flex-row">
         <Button style="w-[100%]" func={setFilterOperation} valueFunc={"income"}>
           Доходы
         </Button>
@@ -44,7 +44,7 @@ export default function Operation() {
       ) : (
         ""
       )}
-      <ul className="mt-[1rem] min-h-70 max-h-150 overflow-y-scroll">
+      <ul className="mt-[1rem] min-h-70 max-h-100 overflow-y-scroll">
         {filterResult.map((el) => (
           <li
             key={el.id}
