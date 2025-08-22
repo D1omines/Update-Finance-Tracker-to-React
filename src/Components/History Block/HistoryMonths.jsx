@@ -5,7 +5,6 @@ import { historyContext } from "./History";
 export default function HistiryMonths() {
   const { changeMonth, styleCurrMonth } = useContext(historyContext);
   const [monthValue, setMonthValue] = useState("");
-  console.log(monthValue);
 
   return (
     <div className="flex flex-col gap-5">

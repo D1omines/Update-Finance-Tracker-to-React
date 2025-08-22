@@ -11,6 +11,7 @@ import History from "./Components/History Block/History";
 import { useContext } from "react";
 import { operationContext } from "./Components/Layout";
 import Button from "./Components/Button";
+import HeaderLayout from "./Components/Context/HeaderLayout";
 
 function App() {
   const {
@@ -24,7 +25,9 @@ function App() {
 
   return (
     <>
-      <Header />
+      <HeaderLayout>
+        <Header />
+      </HeaderLayout>
       <main className="max-w-[90%] m-auto flex flex-col gap-5 mt-10 md:w-[60%] xl:w-[50%] 2xl:w-[40%]">
         <div className="flex flex-col gap-3 lg:flex-row lg:justify-between">
           <Button
