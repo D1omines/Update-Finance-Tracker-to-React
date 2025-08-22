@@ -44,7 +44,7 @@ export default function HeaderLayout({ children }) {
   }
 
   async function regEmail() {
-    const user = registrationWithEmail(
+    const user = await registrationWithEmail(
       auth,
       newUser.name,
       newUser.email,
@@ -100,7 +100,6 @@ export default function HeaderLayout({ children }) {
         setShowRegistrationEnter,
         setShowRegistration,
         setEnterUserValue,
-        setShowRegistration,
         setNewUser,
 
         user,
